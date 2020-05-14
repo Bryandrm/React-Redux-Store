@@ -22,7 +22,7 @@ const Productos = () => {
     const productos = useSelector( state => state.productos.productos );
     const error = useSelector(state => state.productos.error);
     const cargando = useSelector(state => state.productos.loading);
-    console.log(productos)
+    //console.log(productos)
 
 
 

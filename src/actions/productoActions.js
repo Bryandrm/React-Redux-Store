@@ -7,7 +7,10 @@ import{
     DESCARGA_PRODUCTOS_ERROR,
     OBTENER_PRODUCTO_ELIMINAR,
     PRODUCTO_ELIMINADO_EXITO,
-    PRODUCTO_ELIMINADO_ERROR
+    PRODUCTO_ELIMINADO_ERROR,
+    OBTENER_PRODUCTO_EDITAR,
+    PRODUCTO_EDITADO_EXITO,
+    PRODUCTO_EDITADO_ERROR
 } from '../types';
 
 import clienteAxios from '../config/axios';
@@ -61,7 +64,9 @@ const agregarProductoExito = producto =>({
 const agregarProductoError = (estado) => ({
     type: AGREGAR_PRODUCTO_ERROR,
     payload: estado
-})//FUNCION QUE DESCARGA LOS PRODUCTOS DE LA BASE DE DATOS.
+})
+
+//FUNCION QUE DESCARGA LOS PRODUCTOS DE LA BASE DE DATOS.
 
 export function obtenerProductosAction() {
     return async (dispatch) => {
@@ -70,7 +75,7 @@ export function obtenerProductosAction() {
         try{
             const respuesta = await clienteAxios.get('/productos');
             dispatch( descargarProductosExitosa(respuesta.data) )
-            console.log(respuesta.data);
+            //console.log(respuesta.data);
         }catch (error) {
             dispatch( descargaProductosError())
         }
@@ -100,9 +105,17 @@ export function borrarProductoAction(id){
         try{
             await clienteAxios.delete(`/productos/${id}`);
             dispatch( eliminarProductoExito() );
+
+            // si se elimina, mostrar alerta.
+            Swal.fire(
+                'Eliminado!',
+                'El producto se elimino correctamente.',
+                'success'
+          )
             
         } catch (error) {
-
+            console.log(error);
+            dispatch( eliminarProductoError() )
         }
     }
 }
@@ -119,4 +132,16 @@ const eliminarProductoExito = () => ({
 const eliminarProductoError = () => ({
     type: PRODUCTO_ELIMINADO_ERROR,
     payload: true
+})
+
+// Colocar producto en edicion
+export function obtenerProductoEditar(producto) {
+    return (dispatch) => {
+        dispatch( obtenerProductoEditarAction(producto))
+    }
+}
+
+const obtenerProductoEditarAction = producto => ({
+    type: OBTENER_PRODUCTO_EDITAR,
+    payload: producto
 })
